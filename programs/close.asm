@@ -41,4 +41,4 @@ _start:
     mov     eax, 6              
     int     80h                 
  
-    call    quit                ; call our quit function
+    call    quit                
