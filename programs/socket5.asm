@@ -1,21 +1,21 @@
 %include    'functions4.asm'
  
 SECTION .bss
-buffer resb 255,                ; variable to store request headers
+buffer resb 255,                
  
 SECTION .text
 global  _start
  
 _start:
  
-    xor     eax, eax            ; initialize some registers
+    xor     eax, eax            
     xor     ebx, ebx
     xor     edi, edi
     xor     esi, esi
  
 _socket:
  
-    push    byte 6              ; create socket from lesson 29
+    push    byte 6              
     push    byte 1
     push    byte 2
     mov     ecx, esp
@@ -25,7 +25,7 @@ _socket:
  
 _bind:
  
-    mov     edi, eax            ; bind socket from lesson 30
+    mov     edi, eax            
     push    dword 0x00000000
     push    word 0x2923
     push    word 2
@@ -40,7 +40,7 @@ _bind:
  
 _listen:
  
-    push    byte 1              ; listen socket from lesson 31
+    push    byte 1              
     push    edi
     mov     ecx, esp
     mov     ebx, 4
@@ -49,7 +49,7 @@ _listen:
  
 _accept:
  
-    push    byte 0              ; accept socket from lesson 32
+    push    byte 0              
     push    byte 0
     push    edi
     mov     ecx, esp
@@ -59,26 +59,26 @@ _accept:
  
 _fork:
  
-    mov     esi, eax            ; move return value of SYS_SOCKETCALL into esi (file descriptor for accepted socket, or -1 on error)
-    mov     eax, 2              ; invoke SYS_FORK (kernel opcode 2)
-    int     80h                 ; call the kernel
+    mov     esi, eax            
+    mov     eax, 2              
+    int     80h                 
  
-    cmp     eax, 0              ; if return value of SYS_FORK in eax is zero we are in the child process
-    jz      _read               ; jmp in child process to _read
+    cmp     eax, 0              
+    jz      _read               
  
-    jmp     _accept             ; jmp in parent process to _accept
+    jmp     _accept             
  
 _read:
  
-    mov     edx, 255            ; number of bytes to read (we will only read the first 255 bytes for simplicity)
-    mov     ecx, buffer         ; move the memory address of our buffer variable into ecx
-    mov     ebx, esi            ; move esi into ebx (accepted socket file descriptor)
-    mov     eax, 3              ; invoke SYS_READ (kernel opcode 3)
-    int     80h                 ; call the kernel
+    mov     edx, 255            
+    mov     ecx, buffer         
+    mov     ebx, esi            
+    mov     eax, 3              
+    int     80h                 
  
-    mov     eax, buffer         ; move the memory address of our buffer variable into eax for printing
-    call    sprintLF            ; call our string printing function
+    mov     eax, buffer         
+    call    sprintLF            
  
 _exit:
  
-    call    quit                ; call our quit function
+    call    quit                
